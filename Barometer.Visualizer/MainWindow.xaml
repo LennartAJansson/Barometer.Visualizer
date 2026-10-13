@@ -1,0 +1,85 @@
+<Window x:Class="Barometer.Visualizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+        Title="Barometer – BME280" Height="800" Width="1100"
+        Background="#FF1E1E1E">
+    <Window.Resources>
+        <Style x:Key="CardLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Gray" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="CardValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D30" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="MinWidth" Value="180" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Statusrad -->
+        <Border Grid.Row="0" Background="#FF2D2D30" Padding="10">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="Tidsfönster:" Foreground="Gray" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox x:Name="WindowSelector" Width="90" SelectedIndex="2"
+                              SelectionChanged="WindowSelector_SelectionChanged">
+                        <ComboBoxItem Content="1 h" Tag="1" />
+                        <ComboBoxItem Content="6 h" Tag="6" />
+                        <ComboBoxItem Content="24 h" Tag="24" />
+                        <ComboBoxItem Content="Allt" Tag="0" />
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="StatusDot" Width="12" Height="12" Fill="Gray" Margin="0,0,8,0" />
+                    <TextBlock x:Name="StatusText" Text="Ansluter till NATS..." Foreground="White" VerticalAlignment="Center" />
+                    <TextBlock x:Name="SampleCountText" Text="" Foreground="Gray" Margin="20,0,0,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="SenderText" Text="" Foreground="Gray" Margin="20,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Senaste värden -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Lufttryck" Style="{StaticResource CardLabel}" />
+                    <TextBlock x:Name="PressureValue" Text="–" Foreground="#FF4FC3F7" Style="{StaticResource CardValue}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Temperatur" Style="{StaticResource CardLabel}" />
+                    <TextBlock x:Name="TemperatureValue" Text="–" Foreground="#FFFF7043" Style="{StaticResource CardValue}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Luftfuktighet" Style="{StaticResource CardLabel}" />
+                    <TextBlock x:Name="HumidityValue" Text="–" Foreground="#FF81C784" Style="{StaticResource CardValue}" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="LastUpdateText" Text="" Foreground="Gray" VerticalAlignment="Bottom" Margin="4,0,0,10" />
+        </StackPanel>
+
+        <!-- Diagram -->
+        <ScottPlot:WpfPlot x:Name="PressurePlot" Grid.Row="2" Margin="6,6,6,0" />
+        <ScottPlot:WpfPlot x:Name="TemperaturePlot" Grid.Row="3" Margin="6,0" />
+        <ScottPlot:WpfPlot x:Name="HumidityPlot" Grid.Row="4" Margin="6,0,6,6" />
+    </Grid>
+</Window>
